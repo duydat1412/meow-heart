@@ -1,5 +1,5 @@
 export default {
   root: "./",
-  base: "./",
+  base: "/meow-heart/",
   publicDir: "public",
 };

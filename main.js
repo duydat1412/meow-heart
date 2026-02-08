@@ -22,7 +22,9 @@ const camera = new THREE.PerspectiveCamera(
   1000
 );
 camera.position.set(0, 0, 1000).setLength(150);
-renderer.setPixelRatio(window.devicePixelRatio);
+const maxDpr = Math.max(1, window.devicePixelRatio || 1);
+let currentDpr = maxDpr;
+renderer.setPixelRatio(currentDpr);
 
 // Post Processing
 const renderScene = new RenderPass(scene, camera);
@@ -51,10 +53,10 @@ const textMaterial = new THREE.ShaderMaterial({
       value: 0,
     },
     color1: {
-      value: new THREE.Color(0xff5e7f),
+      value: new THREE.Color(0x63f2ff),
     },
     color2: {
-      value: new THREE.Color(0x5975ff),
+      value: new THREE.Color(0x7aa8ff),
     },
     textPos: {
       value: -10,
@@ -104,7 +106,7 @@ const textMaterial = new THREE.ShaderMaterial({
 });
 
 fontLoader.load("droid_serif_regular.typeface.json", (font) => {
-  const textGeometry = new TextGeometry("I Love Kim Chi", {
+  const textGeometry = new TextGeometry("ntnq cute <3", {
     font: font,
     size: 3,
     height: 1,
@@ -139,52 +141,30 @@ const xSize = 50;
 const ySize = 50;
 const zSize = 50;
 const density = 2;
-const nParticles = xSize * ySize * zSize * density;
-const positions = [];
-const speed = [];
+const baseParticleCount = xSize * ySize * zSize * density;
 
-for (let i = 0; i < nParticles; i++) {
-  positions.push(
-    new THREE.Vector3(
-      Math.random(),
-      Math.random(),
-      Math.random()
-    ).multiplyScalar(100)
-  );
-  speed.push(Math.random() * 10 + 2);
-}
-
-const pointsGeometry = new THREE.BufferGeometry().setFromPoints(positions);
-pointsGeometry.setAttribute(
-  "speed",
-  new THREE.BufferAttribute(new Float32Array(speed), 1)
-);
-
-pointsGeometry.center();
-const points = new THREE.Points(
-  pointsGeometry,
-  new THREE.ShaderMaterial({
-    uniforms: {
-      time: {
-        value: 0,
-      },
-      size: {
-        value: 0.9,
-      },
-      ratio: {
-        value: window.devicePixelRatio,
-      },
-      scaleEntry: { value: 0.7 },
-      step1control: { value: 1 },
-      step2control: { value: 1 },
-      step3control: { value: 1 },
-      step4control: { value: 1 },
-      step5control: { value: 1 },
-      step6control: { value: 1 },
-      color1: { value: new THREE.Color(0xfc466b) }, // Màu bắt đầu gradient
-      color2: { value: new THREE.Color(0x3f5efb) }, // Màu kết thúc gradient
+const pointsMaterial = new THREE.ShaderMaterial({
+  uniforms: {
+    time: {
+      value: 0,
     },
-    vertexShader: `
+    size: {
+      value: 0.9,
+    },
+    ratio: {
+      value: currentDpr,
+    },
+    scaleEntry: { value: 0.7 },
+    step1control: { value: 1 },
+    step2control: { value: 1 },
+    step3control: { value: 1 },
+    step4control: { value: 1 },
+    step5control: { value: 1 },
+    step6control: { value: 1 },
+    color1: { value: new THREE.Color(0x63f2ff) }, // Màu bắt đầu gradient
+    color2: { value: new THREE.Color(0x7aa8ff) }, // Màu kết thúc gradient
+  },
+  vertexShader: `
       #define PI 3.1415926535897932384626433832795
       varying vec2 vUv;
       uniform float time;
@@ -230,7 +210,7 @@ const points = new THREE.Points(
         gl_Position = projectionMatrix * mvPosition;
       }
   `,
-    fragmentShader: `
+  fragmentShader: `
 
     varying vec3 vC;
     varying float vDiscard;
@@ -242,28 +222,86 @@ const points = new THREE.Points(
       gl_FragColor = vec4( vC, 1.0);
     }
   `,
-  })
-);
-;
+});
 
-scene.add(points);
+let points = null;
+const particleScales = [1.0, 0.75, 0.55, 0.4];
+let particleLevel = 0;
+
+function buildParticles(scale) {
+  const nParticles = Math.max(1, Math.floor(baseParticleCount * scale));
+  const positions = [];
+  const speed = [];
+
+  for (let i = 0; i < nParticles; i++) {
+    positions.push(
+      new THREE.Vector3(
+        Math.random(),
+        Math.random(),
+        Math.random()
+      ).multiplyScalar(100)
+    );
+    speed.push(Math.random() * 10 + 2);
+  }
+
+  const pointsGeometry = new THREE.BufferGeometry().setFromPoints(positions);
+  pointsGeometry.setAttribute(
+    "speed",
+    new THREE.BufferAttribute(new Float32Array(speed), 1)
+  );
+
+  pointsGeometry.center();
+
+  if (points) {
+    scene.remove(points);
+    points.geometry.dispose();
+  }
+
+  points = new THREE.Points(pointsGeometry, pointsMaterial);
+  scene.add(points);
+}
+
+buildParticles(particleScales[particleLevel]);
 
 const clock = new THREE.Clock();
 let time = 0;
+let isPaused = false;
+let frameCounter = 0;
+let lastFpsTime = performance.now();
+let lastQualityChange = 0;
+const targetFps = 40;
+const minDpr = 0.6;
+const qualityCooldownMs = 1500;
 
 function animate() {
+  requestAnimationFrame(animate);
+
+  if (isPaused) {
+    return;
+  }
+
   if (resize(renderer, composer)) {
     const canvas = renderer.domElement;
     camera.aspect = canvas.clientWidth / canvas.clientHeight;
     camera.updateProjectionMatrix();
   }
+
   time += clock.getDelta();
   scene.rotation.y = time * 0.25;
-  points.material.uniforms.time.value = time;
+  pointsMaterial.uniforms.time.value = time;
   textMaterial.uniforms.time.value = time;
-  // renderer.render(scene, camera);
+
+  frameCounter += 1;
+  const now = performance.now();
+  const elapsed = now - lastFpsTime;
+  if (elapsed >= 1000) {
+    const fps = (frameCounter * 1000) / elapsed;
+    adjustQuality(fps, now);
+    frameCounter = 0;
+    lastFpsTime = now;
+  }
+
   composer.render();
-  requestAnimationFrame(animate);
 }
 
 animate();
@@ -290,3 +328,47 @@ window.addEventListener("resize", () => {
   camera.aspect = width / height;
   camera.updateProjectionMatrix();
 });
+
+document.addEventListener("visibilitychange", () => {
+  isPaused = document.hidden;
+});
+
+function adjustQuality(fps, now) {
+  if (now - lastQualityChange < qualityCooldownMs) {
+    return;
+  }
+
+  let changed = false;
+
+  if (fps < targetFps - 5) {
+    if (currentDpr > minDpr) {
+      currentDpr = Math.max(minDpr, currentDpr - 0.15);
+      renderer.setPixelRatio(currentDpr);
+      pointsMaterial.uniforms.ratio.value = currentDpr;
+      changed = true;
+    }
+
+    if (particleLevel < particleScales.length - 1) {
+      particleLevel += 1;
+      buildParticles(particleScales[particleLevel]);
+      changed = true;
+    }
+  } else if (fps > targetFps + 8) {
+    if (currentDpr < maxDpr) {
+      currentDpr = Math.min(maxDpr, currentDpr + 0.1);
+      renderer.setPixelRatio(currentDpr);
+      pointsMaterial.uniforms.ratio.value = currentDpr;
+      changed = true;
+    }
+
+    if (particleLevel > 0) {
+      particleLevel -= 1;
+      buildParticles(particleScales[particleLevel]);
+      changed = true;
+    }
+  }
+
+  if (changed) {
+    lastQualityChange = now;
+  }
+}
