@@ -51,13 +51,13 @@ const textMaterial = new THREE.ShaderMaterial({
       value: 0,
     },
     color1: {
-      value: new THREE.Color(0x00E5FF),
+      value: new THREE.Color(0xFFD6E7),
     },
     color2: {
-      value: new THREE.Color(0x0080FF),
+      value: new THREE.Color(0xFF8FBC),
     },
     color3: {
-      value: new THREE.Color(0x0033AA),
+      value: new THREE.Color(0xFF5B9A),
     },
     textPos: {
       value: -10,
@@ -112,7 +112,7 @@ const textMaterial = new THREE.ShaderMaterial({
 });
 
 fontLoader.load("droid_serif_regular.typeface.json", (font) => {
-  const textGeometry = new TextGeometry("ntnq cute <3", {
+  const textGeometry = new TextGeometry("dmy", {
     font: font,
     size: 3,
     height: 1,
@@ -189,9 +189,9 @@ const points = new THREE.Points(
       step4control: { value: 1 },
       step5control: { value: 1 },
       step6control: { value: 1 },
-      color1: { value: new THREE.Color(0x00E5FF) },
-      color2: { value: new THREE.Color(0x0080FF) },
-      color3: { value: new THREE.Color(0x0033AA) },
+      color1: { value: new THREE.Color(0xFFD6E7) },
+      color2: { value: new THREE.Color(0xFF8FBC) },
+      color3: { value: new THREE.Color(0xFF5B9A) },
     },
   vertexShader: `
       #define PI 3.1415926535897932384626433832795

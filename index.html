@@ -14,6 +14,18 @@
     />
 
     <style>
+      :root {
+        --bg-deep: #3a0f24;
+        --bg-mid: #7a1f49;
+        --bg-soft: #ffbfd4;
+        --rose: #ff78ad;
+        --rose-strong: #ff5b9a;
+        --peach: #ffd7e6;
+        --cream: #fff8fb;
+        --text-soft: rgba(255, 244, 248, 0.78);
+        --line-soft: rgba(255, 214, 230, 0.32);
+      }
+
       * {
         margin: 0;
         padding: 0;
@@ -25,8 +37,10 @@
         height: 100%;
         overflow: hidden;
         font-family: 'Fira Sans', sans-serif;
-        background: hsl(220, 60%, 8%);
-        color: hsl(210, 40%, 95%);
+        background:
+          radial-gradient(circle at top, rgba(255, 214, 228, 0.28) 0%, rgba(255, 214, 228, 0) 30%),
+          linear-gradient(180deg, #3a0f24 0%, #6b1a41 48%, #a52f67 100%);
+        color: var(--cream);
       }
       
       canvas {
@@ -41,17 +55,22 @@
         width: 100%;
         text-align: center;
         font-size: 11px;
-        letter-spacing: 2px;
-        color: hsl(215, 25%, 60%);
+        letter-spacing: 3px;
+        color: rgba(255, 232, 240, 0.52);
         bottom: 30px;
         z-index: 100;
+        text-shadow: 0 0 18px rgba(255, 111, 169, 0.2);
       }
       
       /* Splash Screen */
       .splash-screen {
         position: fixed;
         inset: 0;
-        background: hsl(220, 60%, 8%);
+        background:
+          radial-gradient(circle at 50% 22%, rgba(255, 232, 239, 0.22) 0%, rgba(255, 232, 239, 0) 18%),
+          radial-gradient(circle at 15% 20%, rgba(255, 134, 182, 0.22) 0%, rgba(255, 134, 182, 0) 32%),
+          radial-gradient(circle at 85% 78%, rgba(255, 184, 210, 0.18) 0%, rgba(255, 184, 210, 0) 26%),
+          linear-gradient(180deg, rgba(58, 15, 36, 0.97) 0%, rgba(122, 31, 73, 0.96) 55%, rgba(165, 47, 103, 0.93) 100%);
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -65,7 +84,19 @@
         content: '';
         position: absolute;
         inset: 0;
-        background: radial-gradient(ellipse at center, hsl(215, 80%, 55%, 0.08) 0%, transparent 70%);
+        background:
+          radial-gradient(circle at center, rgba(255, 237, 243, 0.12) 0%, rgba(255, 237, 243, 0.02) 26%, transparent 58%),
+          repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0 2px, transparent 2px 14px);
+        pointer-events: none;
+      }
+
+      .splash-screen::after {
+        content: '';
+        position: absolute;
+        inset: 6%;
+        border: 1px solid rgba(255, 224, 234, 0.08);
+        border-radius: 32px;
+        box-shadow: inset 0 0 80px rgba(255, 255, 255, 0.03);
         pointer-events: none;
       }
       
@@ -84,7 +115,8 @@
       
       .floating-heart {
         position: absolute;
-        color: hsl(200, 85%, 60%);
+        color: rgba(255, 194, 218, 0.5);
+        filter: drop-shadow(0 0 8px rgba(255, 120, 173, 0.18));
         animation: floatUp linear infinite;
       }
       
@@ -112,6 +144,7 @@
         flex-direction: column;
         align-items: center;
         gap: 2.5rem;
+        padding: 3.5rem 2rem;
       }
       
       /* Decorative heart icon */
@@ -125,18 +158,19 @@
       .decorative-heart::before {
         content: '';
         position: absolute;
-        inset: -1rem;
-        background: hsl(215, 80%, 55%, 0.1);
+        inset: -1.5rem;
+        background: radial-gradient(circle, rgba(255, 191, 212, 0.38) 0%, rgba(255, 111, 169, 0.12) 45%, transparent 72%);
         border-radius: 50%;
-        filter: blur(20px);
+        filter: blur(18px);
       }
       
       .decorative-heart svg {
         position: relative;
-        width: 3rem;
-        height: 3rem;
-        color: hsl(200, 85%, 60%);
-        animation: heartPulse 2s ease-in-out infinite;
+        width: 3.35rem;
+        height: 3.35rem;
+        color: #ff8fbc;
+        filter: drop-shadow(0 0 16px rgba(255, 143, 188, 0.58));
+        animation: heartPulse 2.6s ease-in-out infinite;
       }
       
       @keyframes heartPulse {
@@ -146,11 +180,12 @@
       
       .splash-title {
         font-size: clamp(2rem, 5vw, 3.75rem);
-        font-weight: 300;
-        letter-spacing: 0.05em;
+        font-weight: 400;
+        letter-spacing: 0.08em;
         text-align: center;
-        color: hsl(210, 40%, 95%);
-        line-height: 1.6;
+        color: var(--cream);
+        line-height: 1.4;
+        text-shadow: 0 0 24px rgba(255, 180, 205, 0.12);
         animation: fadeInDown 1s cubic-bezier(0.16, 1, 0.3, 1);
       }
       
@@ -164,44 +199,50 @@
       .decorative-line .line {
         width: 3rem;
         height: 1px;
-        background: hsl(215, 40%, 22%);
+        background: linear-gradient(90deg, transparent 0%, var(--line-soft) 30%, var(--line-soft) 70%, transparent 100%);
       }
       
       .decorative-line svg {
         width: 0.75rem;
         height: 0.75rem;
-        color: hsl(200, 85%, 60%, 0.6);
+        color: rgba(255, 170, 200, 0.88);
+        filter: drop-shadow(0 0 10px rgba(255, 111, 169, 0.3));
       }
       
       .start-button {
         position: relative;
         font-family: 'Fira Sans', sans-serif;
         font-size: 1.125rem;
-        font-weight: 500;
-        color: hsl(210, 40%, 98%);
-        background: hsl(215, 80%, 55%, 0.1);
-        backdrop-filter: blur(10px);
-        border: 1px solid hsl(215, 80%, 55%, 0.3);
-        padding: 0.75rem 3rem;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        color: #fff7fb;
+        background: linear-gradient(135deg, rgba(255, 148, 193, 0.96) 0%, rgba(255, 120, 173, 0.98) 55%, rgba(255, 91, 154, 1) 100%);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 236, 242, 0.32);
+        padding: 0.9rem 3.25rem;
         border-radius: 9999px;
         cursor: pointer;
+        box-shadow:
+          0 14px 32px rgba(94, 31, 85, 0.34),
+          inset 0 1px 0 rgba(255, 255, 255, 0.26);
         transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
       }
       
       .start-button:hover {
-        background: hsl(215, 80%, 55%, 0.2);
-        border-color: hsl(215, 80%, 55%, 0.5);
-        transform: scale(1.05);
+        transform: translateY(-2px) scale(1.03);
+        box-shadow:
+          0 20px 36px rgba(94, 31, 85, 0.4),
+          0 0 26px rgba(255, 111, 169, 0.24);
       }
       
       .start-button:active {
-        transform: scale(0.95);
+        transform: scale(0.97);
       }
       
       .start-button.clicked {
-        background: hsl(215, 80%, 55%, 0.25);
-        border-color: hsl(200, 85%, 60%, 0.5);
+        background: linear-gradient(135deg, rgba(255, 131, 181, 0.98) 0%, rgba(255, 91, 154, 1) 100%);
+        border-color: rgba(255, 235, 241, 0.44);
       }
       
       /* Pulse effect */
@@ -209,7 +250,7 @@
         position: absolute;
         inset: 0;
         border-radius: 9999px;
-        background: hsl(200, 85%, 60%, 0.3);
+        background: rgba(255, 170, 200, 0.4);
         animation: ping 1s cubic-bezier(0, 0, 0.2, 1);
       }
       
@@ -226,7 +267,8 @@
         align-items: center;
         gap: 0.5rem;
         font-size: 0.875rem;
-        color: hsl(215, 25%, 60%);
+        letter-spacing: 0.04em;
+        color: var(--text-soft);
         opacity: 0;
         transform: translateY(1rem);
         transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
@@ -240,7 +282,7 @@
       .thank-you-message svg {
         width: 0.875rem;
         height: 0.875rem;
-        color: hsl(200, 85%, 60%);
+        color: rgba(255, 170, 200, 0.9);
       }
       
       @keyframes fadeInDown {
@@ -281,7 +323,7 @@
         </div>
         
         <!-- Main title -->
-        <h1 class="splash-title">Tặng ebe ntnq</h1>
+        <h1 class="splash-title">hello dmy</h1>
         
         <!-- Decorative line -->
         <div class="decorative-line">
@@ -294,7 +336,7 @@
         
         <!-- Button -->
         <div style="position: relative;">
-          <button class="start-button" id="startButton">dạ</button>
+          <button class="start-button" id="startButton">click to open</button>
         </div>
         
         <!-- Thank you message -->
@@ -302,7 +344,7 @@
           <svg viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
           </svg>
-          <span>Happy Valentine's Day</span>
+          <span>my da noi vay thi ok thoi</span>
           <svg viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
           </svg>
