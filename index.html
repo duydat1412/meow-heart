@@ -284,6 +284,82 @@
         height: 0.875rem;
         color: rgba(217, 186, 77, 0.94);
       }
+
+      .heart-effects {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+        z-index: 200;
+      }
+
+      .click-count-toast {
+        position: fixed;
+        left: 0;
+        top: 0;
+        transform: translate(-50%, -50%);
+        padding: 0.55rem 0.9rem;
+        border-radius: 999px;
+        background: rgba(255, 251, 226, 0.95);
+        border: 1px solid rgba(234, 203, 72, 0.34);
+        color: #7a6220;
+        font-size: 0.875rem;
+        font-weight: 600;
+        letter-spacing: 0.03em;
+        box-shadow: 0 10px 24px rgba(234, 203, 72, 0.22);
+        white-space: nowrap;
+        animation: clickToast 1.35s ease forwards;
+      }
+
+      .sunflower-pop {
+        position: fixed;
+        left: 0;
+        top: 0;
+        transform: translate(-50%, -50%);
+        font-size: var(--size, 2rem);
+        filter: drop-shadow(0 8px 12px rgba(234, 203, 72, 0.24));
+        animation: sunflowerBurst 1.35s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+      }
+
+      @keyframes clickToast {
+        0% {
+          opacity: 0;
+          transform: translate(-50%, -50%) scale(0.85);
+        }
+        15% {
+          opacity: 1;
+          transform: translate(-50%, calc(-50% - 8px)) scale(1);
+        }
+        70% {
+          opacity: 1;
+          transform: translate(-50%, calc(-50% - 14px)) scale(1);
+        }
+        100% {
+          opacity: 0;
+          transform: translate(-50%, calc(-50% - 26px)) scale(0.96);
+        }
+      }
+
+      @keyframes sunflowerBurst {
+        0% {
+          opacity: 0;
+          transform: translate(-50%, -50%) translate(0, 0) scale(0.4) rotate(-10deg);
+        }
+        20% {
+          opacity: 1;
+        }
+        65% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+          transform:
+            translate(-50%, -50%)
+            translate(var(--dx, 0px), var(--dy, 0px))
+            scale(1.05)
+            rotate(var(--rot, 0deg));
+        }
+      }
       
       @keyframes fadeInDown {
         from {
@@ -434,6 +510,7 @@
       });
     </script>
 
+    <div class="heart-effects" id="heartEffects"></div>
     <div class="footer">ok mau tim</div>
   </body>
 </html>

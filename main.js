@@ -43,11 +43,34 @@ renderer.toneMapping = THREE.LinearToneMapping;
 renderer.toneMappingExposure = 1.5;
 renderer.outputEncoding = THREE.sRGBEncoding;
 
+function createSunflowerTexture() {
+  const canvas = document.createElement("canvas");
+  canvas.width = 128;
+  canvas.height = 128;
+  const ctx = canvas.getContext("2d");
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.font = "92px serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("🌻", canvas.width / 2, canvas.height / 2 + 4);
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.needsUpdate = true;
+  return texture;
+}
+
+const sunflowerTexture = createSunflowerTexture();
+
 // Create Text
 const fontLoader = new FontLoader();
 const textMaterial = new THREE.ShaderMaterial({
   uniforms: {
     time: {
+      value: 0,
+    },
+    tapPulse: {
       value: 0,
     },
     color1: {
@@ -71,6 +94,7 @@ const textMaterial = new THREE.ShaderMaterial({
   uniform vec3 color2;
   uniform vec3 color3;
   uniform float textPos;
+  uniform float tapPulse;
 
   void main() {
     vec3 pos = position;
@@ -85,6 +109,7 @@ const textMaterial = new THREE.ShaderMaterial({
     if (dt < -nullPoint || dt > nullPoint) {
         r = 15.;
     }
+    r += tapPulse * 3.2;
 
     // color
     float gradientFactor = sin( pos.x * 0.01 + pos.y * 0.01); 
@@ -176,6 +201,9 @@ const points = new THREE.Points(
       time: {
         value: 0,
       },
+      tapPulse: {
+        value: 0,
+      },
       size: {
         value: 0.9,
       },
@@ -206,6 +234,7 @@ const points = new THREE.Points(
       uniform vec3 color1;
       uniform vec3 color2;
       uniform vec3 color3;
+      uniform float tapPulse;
 
       void main() {
         vec3 pos = position;
@@ -222,6 +251,7 @@ const points = new THREE.Points(
         if (dt < -nullPoint || dt > nullPoint) {
             r = 15.;
         }
+        r += tapPulse * 3.2;
         float dDyn = length(h) - r;  
         float dConst = length(h) - 15.;      
 
@@ -261,8 +291,112 @@ const points = new THREE.Points(
 
 scene.add(points);
 
+const heartHitArea = new THREE.Mesh(
+  new THREE.SphereGeometry(42, 32, 32),
+  new THREE.MeshBasicMaterial({
+    transparent: true,
+    opacity: 0,
+    depthWrite: false,
+  })
+);
+scene.add(heartHitArea);
+
 const clock = new THREE.Clock();
 let time = 0;
+let clickCount = 0;
+let clickPulseStartedAt = -Infinity;
+let lastHeartClickAt = -Infinity;
+const clickPulseDuration = 0.7;
+const clickCooldown = 850;
+const raycaster = new THREE.Raycaster();
+const pointer = new THREE.Vector2();
+raycaster.params.Points.threshold = 3;
+const sunflowerBursts = [];
+
+const heartEffects = document.getElementById("heartEffects");
+
+function getHeartScreenPosition() {
+  const projected = new THREE.Vector3(0, 0, 0).project(camera);
+  const rect = renderer.domElement.getBoundingClientRect();
+
+  return {
+    x: rect.left + (projected.x * 0.5 + 0.5) * rect.width,
+    y: rect.top + (-projected.y * 0.5 + 0.5) * rect.height,
+  };
+}
+
+function showClickToast(x, y) {
+  const toast = document.createElement("div");
+  toast.className = "click-count-toast";
+  toast.style.left = `${x}px`;
+  toast.style.top = `${y}px`;
+  toast.textContent = `click count: ${clickCount}`;
+  heartEffects.appendChild(toast);
+  setTimeout(() => {
+    toast.remove();
+  }, 1400);
+}
+
+function spawnSunflowers() {
+  const total = 18;
+
+  for (let i = 0; i < total; i += 1) {
+    const material = new THREE.SpriteMaterial({
+      map: sunflowerTexture,
+      transparent: true,
+      depthWrite: false,
+      sizeAttenuation: true,
+    });
+    const sprite = new THREE.Sprite(material);
+    const direction = new THREE.Vector3(
+      (Math.random() - 0.5) * 1.1,
+      (Math.random() - 0.5) * 0.95,
+      (Math.random() - 0.5) * 1.1
+    ).normalize();
+    const speed = 14 + Math.random() * 10;
+    const startScale = 1.2 + Math.random() * 0.85;
+
+    sprite.position.set(0, 0, 0);
+    sprite.scale.setScalar(startScale);
+    sprite.renderOrder = 10;
+    scene.add(sprite);
+
+    sunflowerBursts.push({
+      sprite,
+      velocity: direction.multiplyScalar(speed),
+      age: 0,
+      lifetime: 1.1 + Math.random() * 0.3,
+      spin: (Math.random() - 0.5) * 4,
+      startScale,
+    });
+  }
+}
+
+function triggerHeartInteraction(clientX, clientY) {
+  clickCount += 1;
+  clickPulseStartedAt = time;
+  lastHeartClickAt = performance.now();
+  showClickToast(clientX, clientY);
+  spawnSunflowers();
+}
+
+renderer.domElement.addEventListener("pointerdown", (event) => {
+  const now = performance.now();
+  if (now - lastHeartClickAt < clickCooldown) {
+    return;
+  }
+
+  const rect = renderer.domElement.getBoundingClientRect();
+  pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+  pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+  raycaster.setFromCamera(pointer, camera);
+  const intersects = raycaster.intersectObject(heartHitArea, false);
+
+  if (intersects.length > 0) {
+    triggerHeartInteraction(event.clientX, event.clientY);
+  }
+});
 
 function animate() {
   if (resize(renderer, composer)) {
@@ -270,10 +404,43 @@ function animate() {
     camera.aspect = canvas.clientWidth / canvas.clientHeight;
     camera.updateProjectionMatrix();
   }
-  time += clock.getDelta();
+  const delta = clock.getDelta();
+  time += delta;
   scene.rotation.y = time * 0.25;
+
+  const pulseProgress = (time - clickPulseStartedAt) / clickPulseDuration;
+  const tapPulse =
+    pulseProgress >= 0 && pulseProgress <= 1
+      ? Math.pow(Math.sin(pulseProgress * Math.PI), 2.6)
+      : 0;
+
+  for (let i = sunflowerBursts.length - 1; i >= 0; i -= 1) {
+    const burst = sunflowerBursts[i];
+    burst.age += delta;
+
+    const lifeProgress = burst.age / burst.lifetime;
+    if (lifeProgress >= 1) {
+      scene.remove(burst.sprite);
+      burst.sprite.material.dispose();
+      sunflowerBursts.splice(i, 1);
+      continue;
+    }
+
+    burst.velocity.multiplyScalar(0.985);
+    burst.velocity.y += 2.8 * delta;
+    burst.sprite.position.addScaledVector(burst.velocity, delta);
+    burst.sprite.material.opacity = 1 - lifeProgress;
+
+    const scale =
+      burst.startScale * (0.82 + Math.sin(lifeProgress * Math.PI) * 0.55);
+    burst.sprite.scale.setScalar(scale);
+    burst.sprite.material.rotation += burst.spin * delta;
+  }
+
   points.material.uniforms.time.value = time;
+  points.material.uniforms.tapPulse.value = tapPulse;
   textMaterial.uniforms.time.value = time;
+  textMaterial.uniforms.tapPulse.value = tapPulse;
 
   composer.render();
   requestAnimationFrame(animate);
