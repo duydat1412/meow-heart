@@ -299,14 +299,15 @@
         top: 0;
         transform: translate(-50%, -50%);
         padding: 0;
-        color: #7a6220;
+        color: #fffef0;
         font-size: 0.95rem;
         font-weight: 600;
         letter-spacing: 0.03em;
         white-space: nowrap;
         text-shadow:
-          0 0 10px rgba(255, 251, 226, 0.95),
-          0 2px 12px rgba(234, 203, 72, 0.25);
+          0 0 8px rgba(255, 255, 240, 0.98),
+          0 0 18px rgba(255, 244, 140, 0.92),
+          0 0 30px rgba(246, 221, 107, 0.72);
         animation: clickToast 1.35s ease forwards;
       }
 
@@ -358,6 +359,135 @@
             scale(1.05)
             rotate(var(--rot, 0deg));
         }
+      }
+
+      .options-toggle {
+        position: fixed;
+        top: 18px;
+        left: 18px;
+        z-index: 12020;
+        border: 1px solid rgba(234, 203, 72, 0.28);
+        background: rgba(255, 252, 234, 0.78);
+        color: #7a6220;
+        border-radius: 999px;
+        width: 38px;
+        height: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        font-size: 1rem;
+        font-weight: 600;
+        backdrop-filter: blur(12px);
+        box-shadow: 0 8px 24px rgba(234, 203, 72, 0.16);
+        cursor: pointer;
+      }
+
+      .options-panel {
+        position: fixed;
+        top: 58px;
+        left: 18px;
+        z-index: 12019;
+        width: min(260px, calc(100vw - 36px));
+        padding: 0.95rem;
+        border-radius: 20px;
+        border: 1px solid rgba(234, 203, 72, 0.24);
+        background: rgba(255, 252, 234, 0.88);
+        color: #7a6220;
+        backdrop-filter: blur(16px);
+        box-shadow: 0 16px 40px rgba(234, 203, 72, 0.18);
+        opacity: 0;
+        transform: translateY(-8px) scale(0.98);
+        pointer-events: none;
+        transition: opacity 0.25s ease, transform 0.25s ease;
+      }
+
+      .options-panel.open {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        pointer-events: auto;
+      }
+
+      .options-title {
+        margin-bottom: 0.7rem;
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .options-grid {
+        display: grid;
+        gap: 0.55rem;
+      }
+
+      .options-field label {
+        display: block;
+        margin-bottom: 0.2rem;
+        font-size: 0.72rem;
+        letter-spacing: 0.04em;
+        opacity: 0.8;
+      }
+
+      .options-field input {
+        width: 100%;
+        border: 1px solid rgba(234, 203, 72, 0.28);
+        background: rgba(255, 255, 255, 0.5);
+        color: #7a6220;
+        border-radius: 12px;
+        padding: 0.5rem 0.65rem;
+        font-size: 0.82rem;
+        outline: none;
+      }
+
+      .options-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.6rem;
+      }
+
+      .music-toggle {
+        border: 1px solid rgba(234, 203, 72, 0.24);
+        background: rgba(255, 247, 204, 0.8);
+        color: #7a6220;
+        border-radius: 999px;
+        padding: 0.45rem 0.7rem;
+        font-size: 0.76rem;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .preset-list {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.45rem;
+      }
+
+      .preset-button,
+      .apply-button {
+        border: 1px solid rgba(234, 203, 72, 0.24);
+        background: rgba(255, 247, 204, 0.85);
+        color: #7a6220;
+        border-radius: 14px;
+        padding: 0.55rem 0.65rem;
+        font-size: 0.76rem;
+        font-weight: 600;
+        text-align: left;
+        cursor: pointer;
+      }
+
+      .preset-button span {
+        display: block;
+        font-size: 0.68rem;
+        opacity: 0.8;
+        margin-top: 0.15rem;
+      }
+
+      .apply-button {
+        width: 100%;
+        text-align: center;
+        margin-top: 0.15rem;
       }
       
       @keyframes fadeInDown {
@@ -435,6 +565,46 @@
 
     <script type="module" src="./main.js"></script>
 
+    <div class="heart-effects" id="heartEffects"></div>
+    <button class="options-toggle" id="optionsToggle" type="button" aria-label="Options">⚙</button>
+    <div class="options-panel" id="optionsPanel">
+      <div class="options-title">Heart Options</div>
+      <div class="options-grid">
+        <div class="options-field">
+          <label for="colorTop">Top Glow</label>
+          <input id="colorTop" type="text" value="#FFF8C5" spellcheck="false">
+        </div>
+        <div class="options-field">
+          <label for="colorMid">Main Gold</label>
+          <input id="colorMid" type="text" value="#F6DD6B" spellcheck="false">
+        </div>
+        <div class="options-field">
+          <label for="colorDeep">Deep Gold</label>
+          <input id="colorDeep" type="text" value="#EACB48" spellcheck="false">
+        </div>
+        <button class="apply-button" id="applyColors" type="button">apply custom colors</button>
+        <div class="options-row">
+          <div class="options-title" style="margin: 0; font-size: 0.72rem;">Music</div>
+          <button class="music-toggle" id="musicToggle" type="button">music: on</button>
+        </div>
+        <div class="options-title" style="margin: 0; font-size: 0.72rem;">Presets</div>
+        <div class="preset-list">
+          <button class="preset-button" type="button" data-preset="sunny" data-c1="#FFF8C5" data-c2="#F6DD6B" data-c3="#EACB48" data-icon="🌻">Sunny
+            <span>🌻 butter gold</span>
+          </button>
+          <button class="preset-button" type="button" data-preset="peach" data-c1="#FFE7C8" data-c2="#FFC978" data-c3="#F0A54D" data-icon="🌼">Peach
+            <span>🌼 warm honey</span>
+          </button>
+          <button class="preset-button" type="button" data-preset="pink" data-c1="#FFE1EF" data-c2="#FF9BC0" data-c3="#FF6CA0" data-icon="🌷">Pink
+            <span>🌷 soft valentine</span>
+          </button>
+          <button class="preset-button" type="button" data-preset="mint" data-c1="#F4FFD8" data-c2="#D7F28A" data-c3="#B8D96A" data-icon="🍀">Mint
+            <span>🍀 lime butter</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
     <script>
       // Generate floating hearts
       const floatingHeartsContainer = document.getElementById('floatingHearts');
@@ -507,9 +677,100 @@
           });
         }
       });
+
+      const optionsToggle = document.getElementById('optionsToggle');
+      const optionsPanel = document.getElementById('optionsPanel');
+      const applyColorsButton = document.getElementById('applyColors');
+      const musicToggle = document.getElementById('musicToggle');
+      const colorTop = document.getElementById('colorTop');
+      const colorMid = document.getElementById('colorMid');
+      const colorDeep = document.getElementById('colorDeep');
+      const presetButtons = Array.from(document.querySelectorAll('.preset-button'));
+
+      const normalizeHex = (value) => {
+        const trimmed = value.trim();
+        if (!trimmed) return null;
+        const normalized = trimmed.startsWith('#') ? trimmed : `#${trimmed}`;
+        return /^#[0-9a-fA-F]{6}$/.test(normalized) ? normalized.toUpperCase() : null;
+      };
+
+      const setMusicButtonState = () => {
+        musicToggle.textContent = bgMusic.paused ? 'music: off' : 'music: on';
+      };
+
+      const applyPalette = ({ color1, color2, color3, icon }) => {
+        if (!window.heartCustomizer) return;
+        window.heartCustomizer.setHeartPalette({ color1, color2, color3 });
+        if (icon) {
+          window.heartCustomizer.setBurstEmoji(icon);
+        }
+        colorTop.value = color1;
+        colorMid.value = color2;
+        colorDeep.value = color3;
+      };
+
+      const syncCustomizerState = () => {
+        if (!window.heartCustomizer) {
+          requestAnimationFrame(syncCustomizerState);
+          return;
+        }
+
+        const state = window.heartCustomizer.getState();
+        colorTop.value = state.color1;
+        colorMid.value = state.color2;
+        colorDeep.value = state.color3;
+      };
+
+      syncCustomizerState();
+      setMusicButtonState();
+
+      optionsToggle.addEventListener('click', () => {
+        optionsPanel.classList.toggle('open');
+      });
+
+      applyColorsButton.addEventListener('click', () => {
+        const color1 = normalizeHex(colorTop.value);
+        const color2 = normalizeHex(colorMid.value);
+        const color3 = normalizeHex(colorDeep.value);
+
+        if (!color1 || !color2 || !color3) {
+          return;
+        }
+
+        applyPalette({ color1, color2, color3 });
+      });
+
+      presetButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          applyPalette({
+            color1: button.dataset.c1,
+            color2: button.dataset.c2,
+            color3: button.dataset.c3,
+            icon: button.dataset.icon,
+          });
+        });
+      });
+
+      musicToggle.addEventListener('click', async () => {
+        if (bgMusic.paused) {
+          try {
+            await bgMusic.play();
+            if (bgMusic.volume < 0.45) {
+              bgMusic.volume = 0.45;
+            }
+          } catch (err) {
+            console.warn('Audio playback failed:', err);
+          }
+        } else {
+          bgMusic.pause();
+        }
+        setMusicButtonState();
+      });
+
+      bgMusic.addEventListener('play', setMusicButtonState);
+      bgMusic.addEventListener('pause', setMusicButtonState);
     </script>
 
-    <div class="heart-effects" id="heartEffects"></div>
     <div class="footer">ok mau tim</div>
   </body>
 </html>

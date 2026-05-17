@@ -43,7 +43,7 @@ renderer.toneMapping = THREE.LinearToneMapping;
 renderer.toneMappingExposure = 1.5;
 renderer.outputEncoding = THREE.sRGBEncoding;
 
-function createSunflowerTexture() {
+function createEmojiTexture(emoji) {
   const canvas = document.createElement("canvas");
   canvas.width = 128;
   canvas.height = 128;
@@ -53,7 +53,7 @@ function createSunflowerTexture() {
   ctx.font = "92px serif";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText("🌻", canvas.width / 2, canvas.height / 2 + 4);
+  ctx.fillText(emoji, canvas.width / 2, canvas.height / 2 + 4);
 
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
@@ -61,7 +61,8 @@ function createSunflowerTexture() {
   return texture;
 }
 
-const sunflowerTexture = createSunflowerTexture();
+let burstEmoji = "🌻";
+let burstTexture = createEmojiTexture(burstEmoji);
 
 // Create Text
 const fontLoader = new FontLoader();
@@ -337,12 +338,38 @@ function showClickToast(x, y) {
   }, 1400);
 }
 
+function setHeartPalette(colors) {
+  const next = {
+    color1: new THREE.Color(colors.color1),
+    color2: new THREE.Color(colors.color2),
+    color3: new THREE.Color(colors.color3),
+  };
+
+  textMaterial.uniforms.color1.value.copy(next.color1);
+  textMaterial.uniforms.color2.value.copy(next.color2);
+  textMaterial.uniforms.color3.value.copy(next.color3);
+  points.material.uniforms.color1.value.copy(next.color1);
+  points.material.uniforms.color2.value.copy(next.color2);
+  points.material.uniforms.color3.value.copy(next.color3);
+}
+
+function setBurstEmoji(emoji) {
+  if (!emoji) {
+    return;
+  }
+
+  burstEmoji = emoji;
+  const nextTexture = createEmojiTexture(emoji);
+  burstTexture.dispose();
+  burstTexture = nextTexture;
+}
+
 function spawnSunflowers() {
   const total = 18;
 
   for (let i = 0; i < total; i += 1) {
     const material = new THREE.SpriteMaterial({
-      map: sunflowerTexture,
+      map: burstTexture,
       transparent: true,
       depthWrite: false,
       sizeAttenuation: true,
@@ -379,6 +406,19 @@ function triggerHeartInteraction(clientX, clientY) {
   showClickToast(clientX, clientY);
   spawnSunflowers();
 }
+
+window.heartCustomizer = {
+  setHeartPalette,
+  setBurstEmoji,
+  getState() {
+    return {
+      burstEmoji,
+      color1: `#${textMaterial.uniforms.color1.value.getHexString()}`,
+      color2: `#${textMaterial.uniforms.color2.value.getHexString()}`,
+      color3: `#${textMaterial.uniforms.color3.value.getHexString()}`,
+    };
+  },
+};
 
 renderer.domElement.addEventListener("pointerdown", (event) => {
   const now = performance.now();
