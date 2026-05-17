@@ -15,15 +15,15 @@
 
     <style>
       :root {
-        --bg-deep: #3a0f24;
-        --bg-mid: #7a1f49;
-        --bg-soft: #ffbfd4;
-        --rose: #ff78ad;
-        --rose-strong: #ff5b9a;
-        --peach: #ffd7e6;
-        --cream: #fff8fb;
-        --text-soft: rgba(255, 244, 248, 0.78);
-        --line-soft: rgba(255, 214, 230, 0.32);
+        --bg-deep: #fffbea;
+        --bg-mid: #fff3bd;
+        --bg-soft: #ffe78a;
+        --lemon: #f6dd6b;
+        --lemon-strong: #eacb48;
+        --olive-soft: #d9ba4d;
+        --cream: #7a6220;
+        --text-soft: rgba(122, 98, 32, 0.78);
+        --line-soft: rgba(234, 203, 72, 0.34);
       }
 
       * {
@@ -38,8 +38,8 @@
         overflow: hidden;
         font-family: 'Fira Sans', sans-serif;
         background:
-          radial-gradient(circle at top, rgba(255, 214, 228, 0.28) 0%, rgba(255, 214, 228, 0) 30%),
-          linear-gradient(180deg, #3a0f24 0%, #6b1a41 48%, #a52f67 100%);
+          radial-gradient(circle at top, rgba(255, 246, 184, 0.72) 0%, rgba(255, 246, 184, 0) 32%),
+          linear-gradient(180deg, #fffef4 0%, #fff5c8 50%, #ffe89a 100%);
         color: var(--cream);
       }
       
@@ -56,10 +56,10 @@
         text-align: center;
         font-size: 11px;
         letter-spacing: 3px;
-        color: rgba(255, 232, 240, 0.52);
+        color: rgba(138, 112, 34, 0.62);
         bottom: 30px;
         z-index: 100;
-        text-shadow: 0 0 18px rgba(255, 111, 169, 0.2);
+        text-shadow: 0 0 18px rgba(246, 221, 107, 0.28);
       }
       
       /* Splash Screen */
@@ -67,10 +67,10 @@
         position: fixed;
         inset: 0;
         background:
-          radial-gradient(circle at 50% 22%, rgba(255, 232, 239, 0.22) 0%, rgba(255, 232, 239, 0) 18%),
-          radial-gradient(circle at 15% 20%, rgba(255, 134, 182, 0.22) 0%, rgba(255, 134, 182, 0) 32%),
-          radial-gradient(circle at 85% 78%, rgba(255, 184, 210, 0.18) 0%, rgba(255, 184, 210, 0) 26%),
-          linear-gradient(180deg, rgba(58, 15, 36, 0.97) 0%, rgba(122, 31, 73, 0.96) 55%, rgba(165, 47, 103, 0.93) 100%);
+          radial-gradient(circle at 50% 22%, rgba(255, 250, 217, 0.86) 0%, rgba(255, 250, 217, 0) 18%),
+          radial-gradient(circle at 15% 20%, rgba(246, 221, 107, 0.2) 0%, rgba(246, 221, 107, 0) 32%),
+          radial-gradient(circle at 85% 78%, rgba(255, 231, 138, 0.24) 0%, rgba(255, 231, 138, 0) 26%),
+          linear-gradient(180deg, rgba(255, 254, 244, 0.99) 0%, rgba(255, 245, 200, 0.97) 55%, rgba(255, 232, 154, 0.96) 100%);
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -85,8 +85,8 @@
         position: absolute;
         inset: 0;
         background:
-          radial-gradient(circle at center, rgba(255, 237, 243, 0.12) 0%, rgba(255, 237, 243, 0.02) 26%, transparent 58%),
-          repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0 2px, transparent 2px 14px);
+          radial-gradient(circle at center, rgba(255, 251, 226, 0.5) 0%, rgba(255, 251, 226, 0.14) 26%, transparent 58%),
+          repeating-linear-gradient(135deg, rgba(234, 203, 72, 0.04) 0 2px, transparent 2px 14px);
         pointer-events: none;
       }
 
@@ -94,9 +94,9 @@
         content: '';
         position: absolute;
         inset: 6%;
-        border: 1px solid rgba(255, 224, 234, 0.08);
+        border: 1px solid rgba(234, 203, 72, 0.14);
         border-radius: 32px;
-        box-shadow: inset 0 0 80px rgba(255, 255, 255, 0.03);
+        box-shadow: inset 0 0 80px rgba(255, 255, 255, 0.14);
         pointer-events: none;
       }
       
@@ -115,8 +115,8 @@
       
       .floating-heart {
         position: absolute;
-        color: rgba(255, 194, 218, 0.5);
-        filter: drop-shadow(0 0 8px rgba(255, 120, 173, 0.18));
+        color: rgba(234, 203, 72, 0.34);
+        filter: drop-shadow(0 0 8px rgba(246, 221, 107, 0.24));
         animation: floatUp linear infinite;
       }
       
@@ -159,7 +159,7 @@
         content: '';
         position: absolute;
         inset: -1.5rem;
-        background: radial-gradient(circle, rgba(255, 191, 212, 0.38) 0%, rgba(255, 111, 169, 0.12) 45%, transparent 72%);
+        background: radial-gradient(circle, rgba(255, 245, 200, 0.96) 0%, rgba(246, 221, 107, 0.34) 45%, transparent 72%);
         border-radius: 50%;
         filter: blur(18px);
       }
@@ -168,8 +168,8 @@
         position: relative;
         width: 3.35rem;
         height: 3.35rem;
-        color: #ff8fbc;
-        filter: drop-shadow(0 0 16px rgba(255, 143, 188, 0.58));
+        color: #eacb48;
+        filter: drop-shadow(0 0 16px rgba(246, 221, 107, 0.48));
         animation: heartPulse 2.6s ease-in-out infinite;
       }
       
@@ -185,7 +185,7 @@
         text-align: center;
         color: var(--cream);
         line-height: 1.4;
-        text-shadow: 0 0 24px rgba(255, 180, 205, 0.12);
+        text-shadow: 0 0 24px rgba(246, 221, 107, 0.18);
         animation: fadeInDown 1s cubic-bezier(0.16, 1, 0.3, 1);
       }
       
@@ -205,8 +205,8 @@
       .decorative-line svg {
         width: 0.75rem;
         height: 0.75rem;
-        color: rgba(255, 170, 200, 0.88);
-        filter: drop-shadow(0 0 10px rgba(255, 111, 169, 0.3));
+        color: rgba(217, 186, 77, 0.92);
+        filter: drop-shadow(0 0 10px rgba(246, 221, 107, 0.28));
       }
       
       .start-button {
@@ -215,16 +215,16 @@
         font-size: 1.125rem;
         font-weight: 600;
         letter-spacing: 0.02em;
-        color: #fff7fb;
-        background: linear-gradient(135deg, rgba(255, 148, 193, 0.96) 0%, rgba(255, 120, 173, 0.98) 55%, rgba(255, 91, 154, 1) 100%);
+        color: #7a6220;
+        background: linear-gradient(135deg, rgba(255, 248, 197, 0.98) 0%, rgba(246, 221, 107, 0.94) 58%, rgba(234, 203, 72, 0.96) 100%);
         backdrop-filter: blur(16px);
-        border: 1px solid rgba(255, 236, 242, 0.32);
+        border: 1px solid rgba(234, 203, 72, 0.28);
         padding: 0.9rem 3.25rem;
         border-radius: 9999px;
         cursor: pointer;
         box-shadow:
-          0 14px 32px rgba(94, 31, 85, 0.34),
-          inset 0 1px 0 rgba(255, 255, 255, 0.26);
+          0 14px 32px rgba(234, 203, 72, 0.24),
+          inset 0 1px 0 rgba(255, 255, 255, 0.46);
         transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
       }
@@ -232,8 +232,8 @@
       .start-button:hover {
         transform: translateY(-2px) scale(1.03);
         box-shadow:
-          0 20px 36px rgba(94, 31, 85, 0.4),
-          0 0 26px rgba(255, 111, 169, 0.24);
+          0 20px 36px rgba(234, 203, 72, 0.28),
+          0 0 26px rgba(246, 221, 107, 0.24);
       }
       
       .start-button:active {
@@ -241,8 +241,8 @@
       }
       
       .start-button.clicked {
-        background: linear-gradient(135deg, rgba(255, 131, 181, 0.98) 0%, rgba(255, 91, 154, 1) 100%);
-        border-color: rgba(255, 235, 241, 0.44);
+        background: linear-gradient(135deg, rgba(255, 242, 168, 1) 0%, rgba(234, 203, 72, 0.98) 100%);
+        border-color: rgba(217, 186, 77, 0.42);
       }
       
       /* Pulse effect */
@@ -250,7 +250,7 @@
         position: absolute;
         inset: 0;
         border-radius: 9999px;
-        background: rgba(255, 170, 200, 0.4);
+        background: rgba(246, 221, 107, 0.32);
         animation: ping 1s cubic-bezier(0, 0, 0.2, 1);
       }
       
@@ -282,7 +282,7 @@
       .thank-you-message svg {
         width: 0.875rem;
         height: 0.875rem;
-        color: rgba(255, 170, 200, 0.9);
+        color: rgba(217, 186, 77, 0.94);
       }
       
       @keyframes fadeInDown {
@@ -434,6 +434,6 @@
       });
     </script>
 
-    <div class="footer">123CONMEOW</div>
+    <div class="footer">ok mau tim</div>
   </body>
 </html>

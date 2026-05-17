@@ -51,13 +51,13 @@ const textMaterial = new THREE.ShaderMaterial({
       value: 0,
     },
     color1: {
-      value: new THREE.Color(0xFFD6E7),
+      value: new THREE.Color(0xFFF8C5),
     },
     color2: {
-      value: new THREE.Color(0xFF8FBC),
+      value: new THREE.Color(0xF6DD6B),
     },
     color3: {
-      value: new THREE.Color(0xFF5B9A),
+      value: new THREE.Color(0xEACB48),
     },
     textPos: {
       value: -10,
@@ -189,9 +189,9 @@ const points = new THREE.Points(
       step4control: { value: 1 },
       step5control: { value: 1 },
       step6control: { value: 1 },
-      color1: { value: new THREE.Color(0xFFD6E7) },
-      color2: { value: new THREE.Color(0xFF8FBC) },
-      color3: { value: new THREE.Color(0xFF5B9A) },
+      color1: { value: new THREE.Color(0xFFF8C5) },
+      color2: { value: new THREE.Color(0xF6DD6B) },
+      color3: { value: new THREE.Color(0xEACB48) },
     },
   vertexShader: `
       #define PI 3.1415926535897932384626433832795
